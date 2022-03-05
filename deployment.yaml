@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    name: nginx
+spec:
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21.6-alpine
+        ports:
+        - containerPort: 80
+###### Mount the config map
+        volumeMounts:
+          - name: mnt
+            mountPath: /usr/share/nginx/html/index.html
+            subPath: file-from-cfgmap
+      volumes:
+      - name: mnt
+        configMap:
+          name: nginx-cfgmap
